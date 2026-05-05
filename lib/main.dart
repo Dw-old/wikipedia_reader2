@@ -21,16 +21,16 @@ class ArticleModel {
 }
 
 class ArticleViewModel extends ChangeNotifier {
-  final ArticleModel model = ArticleModel();
+  final ArticleModel model;
   Summary? summary;
   Exception? error;
   bool isLoading = false;
 
-  ArticleViewModel() {
-    FetchArticle();
+  ArticleViewModel(this.model) {
+    fetchArticle();
   }
   
-  Future<void> FetchArticle () async {
+  Future<void> fetchArticle() async {
     isLoading = true;
     notifyListeners();
     try {
@@ -50,6 +50,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = ArticleViewModel(ArticleModel());
+
     return MaterialApp( 
       home: Scaffold(
         appBar: AppBar(
