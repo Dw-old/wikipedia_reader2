@@ -20,6 +20,31 @@ class ArticleModel {
   }
 }
 
+class ArticleViewModel extends ChangeNotifier {
+  final ArticleModel model = ArticleModel();
+  Summary? summary;
+  Exception? error;
+  bool isLoading = false;
+
+  ArticleViewModel() {
+    FetchArticle();
+  }
+  
+  Future<void> FetchArticle () async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      summary = await model.getRandomArticleSummary();
+      error = null;
+    } on HttpException catch (e) {
+      error = e;
+      summary = null;
+    }
+    isLoading = false;
+    notifyListeners();
+  }
+}
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
