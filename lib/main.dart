@@ -62,7 +62,22 @@ class _ArticleViewState extends State<ArticleView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(title: Text("Wikipedia")),
+      body: Center(
+        child: ListenableBuilder(
+          listenable: viewModel,
+          builder: (context, _) {
+            return switch ((viewModel.isLoading, viewModel.summary, viewModel.error)) {
+              (true, _, _) => CircularProgressIndicator(),
+              (_, _, Exception e) => Text('Error: $e'),
+              (_, Summary summary?, _) => ArticlePage(summary: summary, nextArticle: viewModel.fetchArticle),
+              _ => Text("Something went wrong"),
+            };
+          }
+        ),
+      ),
+    );
   }
 }
 
@@ -122,14 +137,7 @@ class MainApp extends StatelessWidget {
     final viewModel = ArticleViewModel(ArticleModel());
 
     return MaterialApp( 
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Wikipedia"), 
-        ),
-        body:  Center(
-          child: Text('loading...'),
-        ),
-      ),
+      home: ArticleView(),
     );
   }
 }
